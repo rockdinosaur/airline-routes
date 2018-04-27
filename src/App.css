@@ -43,7 +43,11 @@ select {
 }
 
 .map {
-  width: 90%;
+  width: 100%;
+}
+
+.filters {
+  margin: 1rem 0 2rem 0;
 }
 
 .pagination a {

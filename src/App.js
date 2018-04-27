@@ -3,6 +3,7 @@ import './App.css';
 import data from './data'
 import { Table, Route } from './components/Table'
 import { FilterForm } from './components/FilterForm'
+import { Map } from './components/Map'
 
 class App extends React.Component {
   state = {
@@ -94,16 +95,24 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this.state.routes);
-    const routeComponents = this.state.routes.map(route => {
+    const routesPerPage = 25;
+
+    const routesInfo = this.state.routes.map(route => {
       let airlineInfo = this.state.airlines.filter(airline => airline.id === route.airline)[0]
       let srcAirport = this.state.airports.filter(airport => airport.code === route.src)[0]
       let destAirport = this.state.airports.filter(airport => airport.code === route.dest)[0]
-      let info =  {
+      return {
         airline: airlineInfo.name,
         srcAirport: srcAirport.name,
         destAirport: destAirport.name,
+        y1: srcAirport.lat,
+        x1: srcAirport.long,
+        y2: destAirport.lat,
+        x2: destAirport.long,
       }
+    })
+
+    const routeComponents = routesInfo.map(info => {
       return (
         <Route
           airline={info.airline}
@@ -112,7 +121,21 @@ class App extends React.Component {
         />
       )
     })
-    const routesPerPage = 25;
+
+    const routeCoordinates = routesInfo.map(info => {
+      return (
+        <g key="">
+          <circle className="source" cx={info.x1} cy={info.y1}>
+            <title></title>
+          </circle>
+          <circle className="destination" cx={info.x2} cy={info.y2}>
+            <title></title>
+          </circle>
+          <path d={`M${info.x1} ${info.y1} L ${info.x2} ${info.y2}`} />
+        </g>
+      )
+    })
+
     const airlines = [
       <option
         value="all"
@@ -159,6 +182,11 @@ class App extends React.Component {
         <header className="header">
           <h1 className="title">Airline Routes</h1>
         </header>
+        <div>
+          <Map
+            coordinates={routeCoordinates}
+          />
+        </div>
         <section>
           <FilterForm
             airlines={airlines}

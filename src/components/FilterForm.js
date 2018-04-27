@@ -3,7 +3,7 @@ import React from 'react';
 class FilterForm extends React.Component {
   render() {
     return (
-      <div>
+      <div class="filters">
         <span>Show routes on</span>
         <FilterSelect
           name="airlines"
